@@ -1,7 +1,8 @@
 com\ug\project\service\PostService.class
 com\ug\project\model\Post.class
-com\ug\project\ProjectValidation.class
 com\ug\project\controller\PostController.class
-com\ug\project\infrastructure\JPAUtil.class
 com\ug\project\repository\PostRepository.class
 com\ug\project\repository\TestConnection.class
+com\ug\project\ProjectValidation.class
+com\ug\project\controller\RegisterController.class
+com\ug\project\infrastructure\JPAUtil.class

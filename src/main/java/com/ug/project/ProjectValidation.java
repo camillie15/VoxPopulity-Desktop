@@ -12,8 +12,5 @@ public class ProjectValidation {
         TestConnection testConnection = new TestConnection(jpa);
 
         testConnection.testConnection();
-
-        
-        
     }
 }
