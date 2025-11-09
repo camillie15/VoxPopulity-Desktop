@@ -2,61 +2,53 @@ package com.ug.project.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Posts")
-public class Post {
+@Table(name = "Comments")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postId")
+    @Column(name = "commentId")
     private Integer id;
-
-    @Column(name = "tittle", length = 50)
-    private String title;
 
     @Column(name = "content", length = 500)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userId", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_posts_user"))
+            foreignKey = @ForeignKey(name = "fk_comments_user"))
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "postId", nullable = false,
+            foreignKey = @ForeignKey(name = "fk_comments_post"))
+    private Post post;
 
     @Column(name = "createdDate")
     private LocalDateTime createdDate;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
-
-    public void addComment(Comment c) { comments.add(c); c.setPost(this); }
-    public void removeComment(Comment c) { comments.remove(c); c.setPost(null); }
-
-    // Getters/setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public LocalDateTime getCreatedDate() { return createdDate; }
-    public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
-    public List<Comment> getComments() { return comments; }
 
     @PrePersist
     public void prePersist() {
         if (createdDate == null) createdDate = LocalDateTime.now();
     }
 
+    // Getters/setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+    public String getContent() { return content; }
+    public void setContent(String content) { this.content = content; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+    public Post getPost() { return post; }
+    public void setPost(Post post) { this.post = post; }
+    public LocalDateTime getCreatedDate() { return createdDate; }
+    public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
+
     @Override public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Post that)) return false;
+        if (!(o instanceof Comment that)) return false;
         return id != null && id.equals(that.id);
     }
     @Override public int hashCode() { return Objects.hashCode(id); }

@@ -1,7 +1,14 @@
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\controller\PostController.java
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\infrastructure\JPAUtil.java
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\model\Post.java
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\ProjectValidation.java
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\repository\PostRepository.java
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\repository\TestConnection.java
-C:\Users\nan2p\Documents\NetBeansProjects\ProjectValidation\src\main\java\com\ug\project\service\PostService.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\controller\LoginController.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\controller\PostController.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\controller\RegisterController.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\infrastructure\JPAUtil.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\model\Comment.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\model\Post.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\model\User.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\ProjectValidation.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\repository\PostRepository.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\repository\TestConnection.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\repository\UserDAO.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\service\PostService.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\ui\FrameUI.java
+C:\Users\USER\Documents\2 Universidad Estatal\8vo Semestre\VERIFICACIÓN Y VALIDACIÓN DE SOFTWARE\Codigo Java\VoxPopulity-Desktop\src\main\java\com\ug\project\ui\LoginApp.java

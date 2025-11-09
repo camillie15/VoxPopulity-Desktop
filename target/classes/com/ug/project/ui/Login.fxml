@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ug.project.controller.LoginController"
+      spacing="10" alignment="CENTER">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Iniciar sesión" style="-fx-font-size: 18;"/>
+    <TextField fx:id="txtUsername" promptText="Usuario" maxWidth="240"/>
+    <PasswordField fx:id="txtPassword" promptText="Contraseña" maxWidth="240"/>
+    <Button text="Ingresar" onAction="#onLogin" maxWidth="240"/>
+    <Hyperlink text="¿No tienes cuenta? Crear cuenta"
+               onAction="#onGoRegister"/>
+</VBox>
