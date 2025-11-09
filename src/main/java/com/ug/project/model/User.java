@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "Users")
@@ -39,6 +40,12 @@ public class User {
             fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+    private Set<Community> communities = new java.util.HashSet<>();
+
+    public void joinCommunity(Community c) { communities.add(c); c.getMembers().add(this); }
+    public void leaveCommunity(Community c) { communities.remove(c); c.getMembers().remove(this); }
+
     public void addPost(Post p) { posts.add(p); p.setUser(this); }
     public void removePost(Post p) { posts.remove(p); p.setUser(null); }
 
@@ -62,6 +69,7 @@ public class User {
     public void setRol(Integer rol) { this.rol = rol; }
     public List<Post> getPosts() { return posts; }
     public List<Comment> getComments() { return comments; }
+    public Set<Community> getCommunities() { return communities; }
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;

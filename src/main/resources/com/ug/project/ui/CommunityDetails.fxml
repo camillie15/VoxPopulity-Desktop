@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ug.project.controller.CommunityDetailsController"
+      spacing="10" alignment="CENTER_LEFT">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label fx:id="lblName" style="-fx-font-size: 18;" />
+    <Label fx:id="lblDescription" wrapText="true" />
+    <Label fx:id="lblMembers" />
+
+    <HBox spacing="8">
+        <Button text="Crear Post en esta comunidad" fx:id="btnCreatePost" onAction="#onCreatePost" />
+        <Button text="Ver posts (placeholder)" fx:id="btnViewPosts" onAction="#onViewPosts" />
+        <Button text="Atrás" onAction="#onBack" />
+    </HBox>
+</VBox>

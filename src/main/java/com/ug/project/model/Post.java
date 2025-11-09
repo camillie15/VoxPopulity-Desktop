@@ -33,6 +33,13 @@ public class Post {
             fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "communityId", foreignKey = @ForeignKey(name = "fk_posts_community"))
+    private Community community;
+
+    public Community getCommunity() { return community; }
+    public void setCommunity(Community community) { this.community = community; }
+
     public void addComment(Comment c) { comments.add(c); c.setPost(this); }
     public void removeComment(Comment c) { comments.remove(c); c.setPost(null); }
 

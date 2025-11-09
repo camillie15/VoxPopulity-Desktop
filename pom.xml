@@ -15,10 +15,12 @@
         <maven.compiler.release>21</maven.compiler.release>
 
         <!-- Clase principal de tu app (para otros plugins si lo necesitas) -->
-        <exec.mainClass>com.ug.project.ui.LoginApp</exec.mainClass>
+        <exec.mainClass>com.ug.project.ui.App</exec.mainClass>
 
         <!-- Versión de JavaFX -->
         <javafx.version>21.0.5</javafx.version>
+        <!-- Plataforma JavaFX para dependencias nativas (win|linux|mac) -->
+        <javafx.platform>win</javafx.platform>
     </properties>
 
     <dependencies>
@@ -42,16 +44,18 @@
             <version>3.1.0</version>
         </dependency>
 
-        <!-- JavaFX -->
+        <!-- JavaFX (con classifier de plataforma para incluir nativos al ejecutar fuera del plugin) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
         </dependency>
     </dependencies>
 
@@ -62,7 +66,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.ug.project.ui.LoginApp</mainClass>
+                    <mainClass>com.ug.project.ui.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>

@@ -12,6 +12,7 @@
         <class>com.ug.project.model.User</class>
         <class>com.ug.project.model.Post</class>
         <class>com.ug.project.model.Comment</class>
+        <class>com.ug.project.model.Community</class>
 
         <!-- Luego exclude-unlisted-classes -->
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
