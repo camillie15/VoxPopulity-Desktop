@@ -6,7 +6,7 @@ import com.ug.project.repository.CommunityRepository;
 import java.util.List;
 
 public class CommunityService {
-    private final CommunityRepository repo = new CommunityRepository();
+    private static final CommunityRepository repo = new CommunityRepository();
 
     public List<Community> listAll() {
         return repo.findAll();
