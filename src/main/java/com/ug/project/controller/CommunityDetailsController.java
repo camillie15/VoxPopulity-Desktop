@@ -41,6 +41,6 @@ public class CommunityDetailsController {
 
     @FXML
     private void onBack() {
-        LoginApp.switchTo("/com/ug/project/ui/Communities.fxml", 800, 600, "Comunidades - VoxPopuliDB");
+        LoginApp.switchTo("/com/ug/project/ui/Communities.fxml", 1000, 600, "Comunidades - VoxPopuliDB");
     }
 }
