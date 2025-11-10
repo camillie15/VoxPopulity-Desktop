@@ -4,6 +4,7 @@ package com.ug.project.controller;
 import com.ug.project.model.User;
 import com.ug.project.repository.UserDAO;
 import com.ug.project.ui.LoginApp;
+import com.ug.project.infrastructure.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,7 +17,7 @@ public class LoginController {
     private final UserDAO userDAO = new UserDAO();
 
     @FXML
-    private void onLogin(ActionEvent e) {
+    public void onLogin(ActionEvent e) {
         String u = txtUsername.getText();
         String p = txtPassword.getText();
 
@@ -27,8 +28,11 @@ public class LoginController {
 
         User user = userDAO.login(u, p);
         if (user != null) {
-            alert(Alert.AlertType.INFORMATION, "¡Bienvenido " + user.getName() + "!");
-            // aquí podrías navegar a tu pantalla principal
+            // Guardar sesión del usuario
+            SessionManager.setCurrentUser(user);
+            // navegar a la pantalla de comunidades
+            // Abrir Comunidades con tamaño mayor (estilo SPA)
+            LoginApp.switchTo("/com/ug/project/ui/Communities.fxml", 1000, 600, "Comunidades - VoxPopuliDB");
         } else {
             alert(Alert.AlertType.ERROR, "Usuario o contraseña incorrectos.");
         }
