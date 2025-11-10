@@ -8,7 +8,7 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 public class CommunityRepository {
-    private final JPAUtil jpaUtil = new JPAUtil();
+    private static final JPAUtil jpaUtil = new JPAUtil();
 
     public List<Community> findAll() {
         EntityManager em = jpaUtil.getEntityManager();
