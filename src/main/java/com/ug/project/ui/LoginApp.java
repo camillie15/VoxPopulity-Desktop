@@ -3,6 +3,8 @@ package com.ug.project.ui;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.util.logging.Logger;
@@ -55,6 +57,7 @@ public class LoginApp extends Application {
             primaryStage.setScene(scene);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar FXML con init: " + fxmlPath, ex);
+            showNavigationError(fxmlPath, ex);
         }
     }
 
@@ -67,7 +70,18 @@ public class LoginApp extends Application {
             primaryStage.setScene(scene);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar FXML: " + fxmlPath, ex);
+            showNavigationError(fxmlPath, ex);
         }
+    }
+
+    /**
+     * Muestra un diálogo de error al usuario cuando falla la navegación.
+     */
+    private static void showNavigationError(String fxmlPath, Exception ex) {
+        String errorMessage = "No se pudo cargar la pantalla: " + fxmlPath + 
+                              "\n\nError: " + ex.getMessage() +
+                              "\n\nPor favor, contacta al soporte técnico.";
+        new Alert(Alert.AlertType.ERROR, errorMessage, ButtonType.OK).showAndWait();
     }
 
     public static void main(String[] args) { launch(args); }
