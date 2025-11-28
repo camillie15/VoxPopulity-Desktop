@@ -3,6 +3,7 @@ package com.ug.project.controller;
 
 import com.ug.project.model.User;
 import com.ug.project.repository.UserDAO;
+import com.ug.project.service.Navigation;
 import com.ug.project.ui.LoginApp;
 import com.ug.project.infrastructure.SessionManager;
 import javafx.event.ActionEvent;
@@ -32,7 +33,7 @@ public class LoginController {
             SessionManager.setCurrentUser(user);
             // navegar a la pantalla de comunidades
             // Abrir Comunidades con tamaño mayor (estilo SPA)
-            LoginApp.switchTo("/com/ug/project/ui/Communities.fxml", 1000, 600, "Comunidades - VoxPopuliDB");
+            Navigation.switchScene(e, "/com/ug/project/ui/Dashboard.fxml", "VoxPopuly");
         } else {
             alert(Alert.AlertType.ERROR, "Usuario o contraseña incorrectos.");
         }

@@ -77,3 +77,14 @@
     -fx-font-size: 15px;
     -fx-font-weight: 600;
 }
+
+.post-body {
+    -fx-font-size: 13px;
+    -fx-text-fill: #333333;
+    -fx-padding: 5 0 5 0;
+}
+
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}

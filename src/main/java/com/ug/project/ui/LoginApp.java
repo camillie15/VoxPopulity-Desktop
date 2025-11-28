@@ -17,6 +17,8 @@ public class LoginApp extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
         switchTo("/com/ug/project/ui/Login.fxml", 360, 260, "Login - VoxPopuliDB");
+        stage.centerOnScreen();
+        primaryStage.centerOnScreen();
         primaryStage.show();
     }
 
@@ -52,6 +54,7 @@ public class LoginApp extends Application {
             Scene scene = new Scene(root, w, h);
             applyStyle(scene);
             primaryStage.setTitle(title);
+            primaryStage.centerOnScreen();
             primaryStage.setScene(scene);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar FXML con init: " + fxmlPath, ex);
@@ -64,11 +67,11 @@ public class LoginApp extends Application {
             Scene scene = new Scene(loader.load(), w, h);
             applyStyle(scene);
             primaryStage.setTitle(title);
+            primaryStage.centerOnScreen();
             primaryStage.setScene(scene);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Error al cargar FXML: " + fxmlPath, ex);
         }
     }
 
-    public static void main(String[] args) { launch(args); }
 }
