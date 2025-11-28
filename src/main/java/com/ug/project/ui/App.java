@@ -10,16 +10,9 @@ import com.ug.project.infrastructure.JPAUtil;
  */
 public class App {
 
-    public static void main(String[] args) {
-        // Inicializar recursos que queramos preparar antes de iniciar JavaFX
-        try {
-            new JPAUtil(); // inicializa EntityManagerFactory temprano (opcional)
-        } catch (Throwable ex) {
-            System.err.println("Advertencia: no se pudo inicializar JPA antes de arrancar JavaFX: " + ex);
-        }
-
-        // Iniciar la aplicación JavaFX delegando en LoginApp
+    public void runApp (String[] args) {
         Application.launch(LoginApp.class, args);
     }
+
 }
 
