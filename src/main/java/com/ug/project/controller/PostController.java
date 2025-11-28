@@ -4,6 +4,9 @@
  */
 package com.ug.project.controller;
 
+import com.ug.project.service.Navigation;
+import javafx.event.ActionEvent;
+
 /**
  *
  * @author nan2p
