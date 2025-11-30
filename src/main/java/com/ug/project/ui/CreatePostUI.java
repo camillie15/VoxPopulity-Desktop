@@ -49,11 +49,12 @@ public class CreatePostUI {
     public void onCreatePost(ActionEvent actionEvent) {
 
         //Obtener todos los datos del fxml
-        String titulo = titleField.getText().trim();
-        String contenido = contentArea.getText().trim();
+        String titulo = titleField.getText();
+        String contenido = contentArea.getText();
         CommunityItem comunidadSeleccionada = comunidadComboBox.getValue();
 
-        int comunidadId = (comunidadSeleccionada != null) ? comunidadSeleccionada.getId() : 0;
+        //Si ocurre algo mal, id comunidad siempre será 1
+        int comunidadId = (comunidadSeleccionada != null) ? comunidadSeleccionada.getId() : 1;
 
         if (titulo.trim().isEmpty()) {
             warningScreen();
@@ -68,6 +69,7 @@ public class CreatePostUI {
     }
 
     public void onCancel(ActionEvent actionEvent) {
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/Dashboard.fxml", "Dashboard");
     }
 }
 

@@ -54,6 +54,9 @@ public class PostHomeUI {
         Label title = new Label(post.getTitle());
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
+        Label username = new Label(post.getUser().getUsername());
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
         Label content = new Label(post.getContent());
         content.setWrapText(true);
 
@@ -61,7 +64,7 @@ public class PostHomeUI {
         Label date = new Label("Publicado: " + formatDate);
         date.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
 
-        card.getChildren().addAll(title, content, date);
+        card.getChildren().addAll(title, username , content, date);
         return card;
     }
 
@@ -76,4 +79,7 @@ public class PostHomeUI {
     public void onBack(ActionEvent actionEvent) {
     }
 
+    public void viewMyPosts(ActionEvent actionEvent) {
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/UserPosts.fxml", "Mis posts");
+    }
 }

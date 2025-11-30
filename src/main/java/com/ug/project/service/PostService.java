@@ -22,7 +22,7 @@ public class PostService {
         return List.of();
     }
 
-    public void save(String title, String content, int communityId) {
+    public boolean save(String title, String content, int communityId) {
 
         //Creamos el objeto Post
         Post post = new Post();
@@ -51,11 +51,37 @@ public class PostService {
 
         //Llamanos al repositorio para guardar el post en la DB
         try {
-            postRepo.create(post);
+            return postRepo.create(post);
         } catch (Exception e) {
             System.out.println("Error en el PostService - save(): " + e);
+            return false;
         }
     }
 
+    public List<Post> getAllByUserId(int id){
+        try {
+            var posts = postRepo.findByUserId(id);
+            if(posts.isEmpty()) {
+                System.out.println("Error Post Service - getAllByUserId: No se encontraron registros");
+                return List.of();
+            }
+            return posts;
+        } catch (Exception e) {
+            System.out.println("Error Post Service - getAllByUserId: " + e);
+            return List.of();
+        }
+    }
 
+    public boolean deletePost(int idPost){
+        try {
+            return postRepo.delete(idPost);
+        } catch (Exception e) {
+            System.out.println("Error en el PostService - delete(): " + e);
+            return false;
+        }
+    }
+
+    public boolean editPost(Post post){
+        return postRepo.update(post);
+    }
 }
