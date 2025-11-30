@@ -1,17 +1,76 @@
 package com.ug.project.ui;
 
 
+import com.ug.project.controller.PostController;
+import com.ug.project.model.Post;
 import com.ug.project.service.Navigation;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 public class PostHomeUI {
 
+    @FXML
+    private VBox postsContainer;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
+
+    private final PostController postcontroller = new PostController();
+
+    @FXML
+    public void initialize(){
+        chargePostsOnScreen();
+    }
+
+    private void chargePostsOnScreen () {
+        try {
+            List<Post> posts = postcontroller.getAll();
+            drawOnUI(posts);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void drawOnUI (List<Post> posts) {
+        postsContainer.getChildren().clear();
+
+        for (var post: posts){
+            VBox postCard = createPostCard(post);
+            postsContainer.getChildren().add(postCard);
+        }
+    }
+
+    private VBox createPostCard(Post post) {
+        VBox card = new VBox(8);
+        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
+
+        Label title = new Label(post.getTitle());
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+        Label content = new Label(post.getContent());
+        content.setWrapText(true);
+
+        String formatDate = post.getCreatedDate().format(formatter);
+        Label date = new Label("Publicado: " + formatDate);
+        date.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
+
+        card.getChildren().addAll(title, content, date);
+        return card;
+    }
+
     public void onCreatePost(ActionEvent actionEvent) {
-        Navigation.openNewScreen("/com/ug/project/ui/Login.fxml", "Nuevo Test");
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/CreatePost.fxml", "Crear Post");
     }
 
     public void onRefresh(ActionEvent actionEvent) {
+        chargePostsOnScreen();
     }
 
     public void onBack(ActionEvent actionEvent) {

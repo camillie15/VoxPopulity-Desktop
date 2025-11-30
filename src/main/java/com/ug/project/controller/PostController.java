@@ -1,13 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ug.project.controller;
 
-/**
- *
- * @author nan2p
- */
+import com.ug.project.model.Post;
+import com.ug.project.service.PostService;
+
+import java.util.List;
+
 public class PostController {
+
+    private final PostService postService = new PostService();
+
+    public List<Post> getAll () {
+        return postService.getAll();
+    }
+
+    public void savePost(String title, String content, int idCommunity){
+
+        postService.save(title,content,idCommunity);
+
+    }
 
 }

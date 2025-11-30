@@ -39,6 +39,7 @@ public class Navigation {
 
         } catch (IOException e){
             System.err.println("Error al cargar la vista: " + fxmlPath);
+            System.err.println("Error: " + e);
         }
     }
 
