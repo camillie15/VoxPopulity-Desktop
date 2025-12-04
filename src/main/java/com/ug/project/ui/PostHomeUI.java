@@ -1,6 +1,5 @@
 package com.ug.project.ui;
 
-
 import com.ug.project.controller.PostController;
 import com.ug.project.model.Post;
 import com.ug.project.service.Navigation;
@@ -78,7 +77,7 @@ public class PostHomeUI {
 
     public void onBack(ActionEvent actionEvent) {
     }
-
+  
     public void viewMyPosts(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/UserPosts.fxml", "Mis posts");
     }
