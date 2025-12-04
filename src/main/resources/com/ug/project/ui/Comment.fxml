@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--<AnchorPane xmlns="http://javafx.com/javafx"-->
+<!--            xmlns:fx="http://javafx.com/fxml"-->
+<!--            fx:controller="com.ug.project.ui.CommentUI->
+<!--            prefHeight="400.0" prefWidth="600.0">-->
+
+<!--</AnchorPane>-->
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ug.project.ui.CommentUI"
+      spacing="8" alignment="TOP_CENTER"
+      prefWidth="600.0" prefHeight="400.0">
+
+    <padding>
+        <Insets top="12" right="12" bottom="12" left="12"/>
+    </padding>
+
+    <VBox spacing="6" alignment="CENTER_LEFT">
+        <Label fx:id="lblPostTitle" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Post title"/>
+        <Label fx:id="lblPostContent" wrapText="true" text="Post content..."/>
+    </VBox>
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="User:"/>
+        <Label fx:id="lblUser" style="-fx-font-size: 11; -fx-text-fill: #555;"/>
+    </HBox>
+
+    <ListView fx:id="lvComments" prefHeight="240.0" prefWidth="520.0"/>
+
+    <Label text="Add a comment:"/>
+
+    <TextArea fx:id="txtNewComment" wrapText="true" prefRowCount="4" prefWidth="520.0"/>
+
+    <HBox spacing="8" alignment="CENTER_RIGHT">
+        <Button fx:id="btnAdd" text="Add comment" onAction="#onAdd"/>
+    </HBox>
+
+</VBox>
