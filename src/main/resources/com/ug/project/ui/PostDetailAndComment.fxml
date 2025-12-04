@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ug.project.ui.PostDetailAndCommentUI" spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <HBox spacing="10">
+        <Button fx:id="backButton" text="Back"/>
+        <Label fx:id="titleLabel" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+    </HBox>
+
+    <HBox spacing="8">
+        <Label fx:id="usernameLabel"/>
+        <Label fx:id="dateLabel" style="-fx-font-size: 10; -fx-text-fill: #666;"/>
+    </HBox>
+
+    <Label fx:id="contentLabel" wrapText="true"/>
+
+    <Separator/>
+
+    <Label text="Comments:" style="-fx-font-weight: bold;"/>
+    <VBox fx:id="commentsContainer" spacing="8"/>
+
+    <Separator/>
+
+    <Label text="Add a comment:"/>
+    <TextArea fx:id="newCommentArea" prefRowCount="3"/>
+    <HBox spacing="8">
+        <Button fx:id="addCommentButton" text="Add Comment"/>
+    </HBox>
+</VBox>
