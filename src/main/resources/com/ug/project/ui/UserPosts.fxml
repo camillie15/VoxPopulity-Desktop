@@ -7,12 +7,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" spacing="12"
-      styleClass="root"
-      stylesheets="@style.css"
-      xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.ug.project.ui.PostHomeUI">
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ug.project.ui.UserPostsUI"
+            prefHeight="400.0" prefWidth="600.0">
 
     <padding>
         <Insets bottom="14" left="14" right="14" top="14" />
@@ -32,10 +30,7 @@
     </ScrollPane>
 
     <HBox alignment="CENTER_LEFT" spacing="10">
-        <Button onAction="#onCreatePost" text="Nueva Publicación" />
-        <Button onAction="#onRefresh" text="Recargar" />
         <Button onAction="#onBack" text="Atrás" />
-        <Button onAction="#viewMyPosts" text="Mi posteos" />
     </HBox>
 
 </VBox>

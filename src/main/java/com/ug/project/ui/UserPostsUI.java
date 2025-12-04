@@ -1,19 +1,20 @@
 package com.ug.project.ui;
 
 import com.ug.project.controller.PostController;
+import com.ug.project.infrastructure.PostContext;
 import com.ug.project.model.Post;
 import com.ug.project.service.Navigation;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
-public class PostHomeUI {
+public class UserPostsUI {
 
     @FXML
     private VBox postsContainer;
@@ -30,7 +31,7 @@ public class PostHomeUI {
 
     private void chargePostsOnScreen () {
         try {
-            List<Post> posts = postcontroller.getAll();
+            List<Post> posts = postcontroller.getPostsCurrentUser();
             drawOnUI(posts);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -63,22 +64,43 @@ public class PostHomeUI {
         Label date = new Label("Publicado: " + formatDate);
         date.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
 
-        card.getChildren().addAll(title, username , content, date);
+        // Botón de eliminar
+        Button deleteButton = new Button("Eliminar");
+        deleteButton.setStyle("-fx-background-color: #ff4444; -fx-text-fill: white;");
+        deleteButton.setOnAction(event -> handleDeletePost(post.getId(),event));
+
+        // Botón de editar
+        Button editButton = new Button("Editar");
+        editButton.setStyle("-fx-background-color: #44dd44; -fx-text-fill: white;");
+        editButton.setOnAction(event -> handleEditPost(post));
+
+        // Contenedor para los botones (por si quieres agregar más después)
+        HBox buttonContainer = new HBox(10);
+        buttonContainer.getChildren().addAll(deleteButton, editButton);
+
+        card.getChildren().addAll(title, username , content, date, buttonContainer);
         return card;
     }
 
-    public void onCreatePost(ActionEvent actionEvent) {
-        Navigation.switchScene(actionEvent, "/com/ug/project/ui/CreatePost.fxml", "Crear Post");
+    public void handleDeletePost(int idPost, ActionEvent actionEvent){
+        System.out.println("Eliminando post con id: "+ idPost);
+        boolean response = postcontroller.delete(idPost);
+        if (response) {
+            Navigation.switchScene(actionEvent, "/com/ug/project/ui/Dashboard.fxml", "Dashboard");
+        } else {
+            Navigation.openNewScreen("/com/ug/project/ui/Warning.fxml", "Error al eliminar");
+        }
     }
 
-    public void onRefresh(ActionEvent actionEvent) {
-        chargePostsOnScreen();
+    public void handleEditPost(Post post){
+        System.out.println("Actualizando post con id: "+ post.toString());
+        System.out.println(post.toString());
+        PostContext.getInstance().setCurrentPost(post);
+        Navigation.openNewScreen("/com/ug/project/ui/EditPost.fxml", "Editar Post");
+
     }
 
     public void onBack(ActionEvent actionEvent) {
-    }
-  
-    public void viewMyPosts(ActionEvent actionEvent) {
-        Navigation.switchScene(actionEvent, "/com/ug/project/ui/UserPosts.fxml", "Mis posts");
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/Dashboard.fxml", "Dashboard");
     }
 }

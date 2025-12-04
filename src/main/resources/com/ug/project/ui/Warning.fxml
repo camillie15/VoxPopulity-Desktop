@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="20"
+      style="-fx-background-color: white; -fx-border-color: #ff9800; -fx-border-width: 2; -fx-border-radius: 5;"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+    <padding>
+        <Insets bottom="25" left="25" right="25" top="25" />
+    </padding>
+
+
+    <!-- Mensaje de advertencia -->
+    <Label text="¡Advertencia!"
+           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ff9800;"/>
+
+    <Label fx:id="messageLabel"
+           text="Esta es una advertencia importante."
+           style="-fx-font-size: 14px; -fx-text-fill: #666; -fx-text-alignment: center;"
+           wrapText="true"
+           maxWidth="300"/>
+
+
+</VBox>
