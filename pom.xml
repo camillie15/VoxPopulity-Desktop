@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Usa JDK 21 (coherente con tu entorno actual) -->
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>20</maven.compiler.release>
 
         <!-- Clase principal de tu app (para otros plugins si lo necesitas) -->
         <exec.mainClass>com.ug.project.ui.App</exec.mainClass>

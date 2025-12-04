@@ -3,12 +3,17 @@ package com.ug.project.ui;
 import com.ug.project.controller.PostController;
 import com.ug.project.model.Post;
 import com.ug.project.service.Navigation;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -64,6 +69,30 @@ public class PostHomeUI {
         date.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
 
         card.getChildren().addAll(title, username , content, date);
+
+        card.setOnMouseClicked((MouseEvent e) -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ug/project/ui/PostDetailAndComment.fxml"));
+                Parent root = loader.load();
+
+                PostDetailAndCommentUI controller = loader.getController();
+                controller.setPost(post);
+
+                Stage stage = (Stage) postsContainer.getScene().getWindow();
+                Scene scene = new Scene(root);
+
+                java.net.URL css = getClass().getResource("/com/ug/project/ui/style.css");
+                if (css != null) {
+                    scene.getStylesheets().add(css.toExternalForm());
+                }
+
+                stage.setScene(scene);
+                stage.setTitle(post.getTitle());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        });
         return card;
     }
 
