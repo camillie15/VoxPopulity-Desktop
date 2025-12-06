@@ -16,8 +16,16 @@ public class LoginApp extends Application {
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
-        switchTo("/com/ug/project/ui/Login.fxml", 360, 260, "Login - VoxPopuliDB");
-        stage.centerOnScreen();
+
+        // Tamaño recomendado para que la card se vea perfecta
+        int width = 420;
+        int height = 520;
+
+        switchTo("/com/ug/project/ui/Login.fxml", width, height, "Login - VoxPopuliDB");
+
+        primaryStage.setMinWidth(400);   // evita que el usuario reduzca demasiado
+        primaryStage.setMinHeight(480);
+
         primaryStage.centerOnScreen();
         primaryStage.show();
     }

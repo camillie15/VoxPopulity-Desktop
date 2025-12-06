@@ -33,9 +33,11 @@
 
     <HBox alignment="CENTER_LEFT" spacing="10">
         <Button onAction="#onCreatePost" text="Nueva Publicación" />
+        <Button onAction="#onCreatePost" text="Comunidades" /> //Cambiar
         <Button onAction="#onRefresh" text="Recargar" />
         <Button onAction="#onBack" text="Atrás" />
         <Button onAction="#viewMyPosts" text="Mi posteos" />
+        <Button onAction="#onNotifications" text="🔔 Notificaciones" />
     </HBox>
 
 </VBox>
