@@ -1,4 +1,3 @@
-
 package com.ug.project.service;
 
 import com.ug.project.infrastructure.SessionManager;
@@ -6,12 +5,14 @@ import com.ug.project.model.Community;
 import com.ug.project.model.Post;
 import com.ug.project.model.User;
 import com.ug.project.repository.PostRepository;
+import com.ug.project.repository.CommunityRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class PostService {
 
     private final PostRepository postRepo = new PostRepository();
+    private final CommunityRepository communityRepo = new CommunityRepository();
 
     public List<Post> getAll() {
         try {
@@ -22,23 +23,46 @@ public class PostService {
         return List.of();
     }
 
-    public boolean save(String title, String content, int communityId) {
-
-        //Creamos el objeto Post
-        Post post = new Post();
-        User user = new User();
-        Community community = new Community();
-
-        //Asignar id del usuario logueado al post creado
-        var idUserLogged = SessionManager.getCurrentUser().getId();
-        user.setId(idUserLogged);
-        post.setUser(user);
-
-        //Si no existe id de la comunidad actual entonces se lo cambiará a 0 automáticamente
-        if(communityId >= 0){
-            community.setId(communityId);
+    public List<Post> getAllByCommunityId(int communityId) {
+        try {
+            return postRepo.findByCommunityId(communityId);
+        } catch (Exception e) {
+            System.out.println("Error en PostService - getAllByCommunityId: " + e);
+            return List.of();
         }
-        post.setCommunity(community);
+    }
+
+    // Cambiado para aceptar Integer y resolver la entidad Community correctamente
+    public boolean save(String title, String content, Integer communityId) {
+
+        // La comunidad es obligatoria
+        if (communityId == null || communityId <= 0) {
+            System.out.println("Error en el PostService - save(): CommunityId es obligatorio");
+            return false;
+        }
+
+         //Creamos el objeto Post
+         Post post = new Post();
+         User user = new User();
+
+         //Asignar id del usuario logueado al post creado
+         var idUserLogged = SessionManager.getCurrentUser().getId();
+         user.setId(idUserLogged);
+         post.setUser(user);
+
+         //Resolver la community si se proporcionó un id válido
+         if (communityId != null && communityId > 0) {
+             Community c = communityRepo.findById(communityId);
+             if (c != null) {
+                 post.setCommunity(c);
+             } else {
+                 // Si el id no existe, dejamos community en null y loggeamos
+                 System.out.println("Advertencia: la comunidad con id " + communityId + " no existe. Se guardará el post sin comunidad.");
+                 post.setCommunity(null);
+             }
+         } else {
+             post.setCommunity(null);
+         }
 
         //Agregar la fecha y hora actual
         post.setCreatedDate(LocalDateTime.now());

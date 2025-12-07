@@ -96,18 +96,27 @@ public class PostHomeUI {
         return card;
     }
 
+    @FXML
     public void onCreatePost(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/CreatePost.fxml", "Crear Post");
     }
 
+    @FXML
     public void onRefresh(ActionEvent actionEvent) {
         chargePostsOnScreen();
     }
 
+    @FXML
     public void onBack(ActionEvent actionEvent) {
     }
   
+    @FXML
     public void viewMyPosts(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/UserPosts.fxml", "Mis posts");
+    }
+
+    @FXML
+    public void onNewCommunity(ActionEvent actionEvent) {
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/Communities.fxml", "Comunidades");
     }
 }
