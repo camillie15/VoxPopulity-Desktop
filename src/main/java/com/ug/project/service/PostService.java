@@ -1,11 +1,14 @@
 
 package com.ug.project.service;
 
+import com.ug.project.infrastructure.JPAUtil;
 import com.ug.project.infrastructure.SessionManager;
 import com.ug.project.model.Community;
 import com.ug.project.model.Post;
 import com.ug.project.model.User;
 import com.ug.project.repository.PostRepository;
+import jakarta.persistence.EntityManager;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,39 +27,48 @@ public class PostService {
 
     public boolean save(String title, String content, int communityId) {
 
-        //Creamos el objeto Post
-        Post post = new Post();
-        User user = new User();
-        Community community = new Community();
+        EntityManager em = JPAUtil.getEntityManager();
 
-        //Asignar id del usuario logueado al post creado
-        var idUserLogged = SessionManager.getCurrentUser().getId();
-        user.setId(idUserLogged);
-        post.setUser(user);
-
-        //Si no existe id de la comunidad actual entonces se lo cambiará a 0 automáticamente
-        if(communityId >= 0){
-            community.setId(communityId);
-        }
-        post.setCommunity(community);
-
-        //Agregar la fecha y hora actual
-        post.setCreatedDate(LocalDateTime.now());
-
-        //Actualizar el status a activo
-        post.setStatus(1);
-
-        post.setTitle(title);
-        post.setContent(content);
-
-        //Llamanos al repositorio para guardar el post en la DB
         try {
-            return postRepo.create(post);
+            em.getTransaction().begin();
+
+            Post post = new Post();
+
+            // Usuario REAL administrado por JPA
+            int idUser = SessionManager.getCurrentUser().getId();
+            User user = em.find(User.class, idUser);
+            post.setUser(user);
+
+            // Comunidad REAL administrada por JPA
+            Community community = em.find(Community.class, communityId);
+            post.setCommunity(community);
+
+            post.setCreatedDate(LocalDateTime.now());
+            post.setStatus(1);
+            post.setTitle(title);
+            post.setContent(content);
+
+            em.persist(post);
+            em.getTransaction().commit();
+
+            // Crear notificación
+            NotificationService ns = new NotificationService();
+            ns.notifyNewPost(user, post);
+
+            return true;
+
         } catch (Exception e) {
-            System.out.println("Error en el PostService - save(): " + e);
+            System.out.println("Error en PostService.save(): " + e);
+            em.getTransaction().rollback();
             return false;
+
+        } finally {
+            em.close();
         }
     }
+
+
+
 
     public List<Post> getAllByUserId(int id){
         try {

@@ -110,4 +110,16 @@ public class PostHomeUI {
     public void viewMyPosts(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/UserPosts.fxml", "Mis posts");
     }
+
+    public void onCommunnity(ActionEvent actionEvent) {
+
+    }
+
+    public void onNotifications(ActionEvent actionEvent) {
+        NotificationUI ui = new NotificationUI();
+        ui.show();
+    }
+
+
+
 }
