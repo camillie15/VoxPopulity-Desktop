@@ -41,6 +41,8 @@
         <Button onAction="#onRefresh" text="Recargar" />
         <Button onAction="#viewMyPosts" text="Mis posts" />
         <Button onAction="#onNewCommunity" text="Comunidades" />
+        <Button onAction="#onBack" text="Atrás" />
+        <Button onAction="#onNotifications" text="🔔 Notificaciones" />
     </HBox>
 
 </VBox>

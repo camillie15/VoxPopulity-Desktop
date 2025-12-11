@@ -11,11 +11,10 @@ public class ProjectValidation {
     public static void main(String[] args) {
 
         App app = new App();
-        //1. Hacer la conexión con la BD
         try {
 
             JPAUtil jpa = new JPAUtil();
-            TestConnection testConnection = new TestConnection(jpa);
+            TestConnection testConnection = new TestConnection();
             testConnection.testConnection();
             app.runApp(args);
 

@@ -119,4 +119,9 @@ public class PostHomeUI {
     public void onNewCommunity(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/Communities.fxml", "Comunidades");
     }
+
+    public void onNotifications(ActionEvent actionEvent) {
+        NotificationUI ui = new NotificationUI();
+        ui.show();
+    }
 }

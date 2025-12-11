@@ -40,18 +40,48 @@ public class CommentService {
         Comment c = new Comment();
         c.setContent(content.trim());
 
-        // short-lived EM used only to obtain references
         EntityManager em = jpaUtil.getEntityManager();
+
+        Post postRef = null;
+        User userRef = null;
+
         try {
-            c.setUser((User) em.getReference(getUserClass(), userId));
-            c.setPost((Post) em.getReference(getPostClass(), postId));
+            userRef = (User) em.getReference(getUserClass(), userId);
+            postRef = (Post) em.getReference(getPostClass(), postId);
+
+            c.setUser(userRef);
+            c.setPost(postRef);
             c.setCreatedDate(LocalDateTime.now());
+
         } finally {
             em.close();
         }
 
-        return repo.save(c);
+        // 1️⃣ Guardar comentario
+        Comment saved = repo.save(c);
+
+        // 2️⃣ Notificar al dueño del post (si no es la misma persona)
+        try {
+            if (postRef != null && postRef.getUser() != null) {
+                Integer ownerId = postRef.getUser().getId();
+
+                if (!ownerId.equals(userId)) {
+                    NotificationService ns = new NotificationService();
+                    String msg = userRef.getUsername()
+                            + " comentó tu publicación: \""
+                            + postRef.getTitle() + "\"";
+
+                    ns.send(postRef.getUser(), msg);
+                    System.out.println("🔔 Notificación enviada al dueño del post.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al notificar comentario: " + e);
+        }
+
+        return saved;
     }
+
 
     public Comment updateComment(Integer commentId, String newContent) {
         if (newContent == null || newContent.trim().isEmpty()) {

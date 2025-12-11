@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" alignment="TOP_CENTER"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.ug.project.controller.NotificationController"
+      stylesheets="@style.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Notificaciones" styleClass="header-label"/>
+
+    <ListView fx:id="notificationList"
+              prefWidth="400"
+              prefHeight="300"
+              style="-fx-background-color: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
+
+    <Label fx:id="emptyLabel"
+           text="No tienes notificaciones."
+           visible="false"
+           style="-fx-text-fill: #777; -fx-font-size: 14;" />
+
+    <Button text="Marcar todas como leídas"
+            onAction="#onMarkAllRead"
+            styleClass="main-button"/>
+
+</VBox>

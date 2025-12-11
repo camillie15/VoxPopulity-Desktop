@@ -1,11 +1,14 @@
 package com.ug.project.service;
 
+import com.ug.project.infrastructure.JPAUtil;
 import com.ug.project.infrastructure.SessionManager;
 import com.ug.project.model.Community;
 import com.ug.project.model.Post;
 import com.ug.project.model.User;
 import com.ug.project.repository.PostRepository;
 import com.ug.project.repository.CommunityRepository;
+import jakarta.persistence.EntityManager;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,15 +44,25 @@ public class PostService {
             return false;
         }
 
-         //Creamos el objeto Post
-         Post post = new Post();
-         User user = new User();
+        EntityManager em = JPAUtil.getEntityManager();
 
+        try {
+            em.getTransaction().begin();
+
+            Post post = new Post();
+
+            // Usuario REAL administrado por JPA
+            int idUser = SessionManager.getCurrentUser().getId();
+            User user = em.find(User.class, idUser);
+            post.setUser(user);
          //Asignar id del usuario logueado al post creado
          var idUserLogged = SessionManager.getCurrentUser().getId();
          user.setId(idUserLogged);
          post.setUser(user);
 
+            // Comunidad REAL administrada por JPA
+            Community community = em.find(Community.class, communityId);
+            post.setCommunity(community);
          //Resolver la community si se proporcionó un id válido
          if (communityId != null && communityId > 0) {
              Community c = communityRepo.findById(communityId);
@@ -64,21 +77,27 @@ public class PostService {
              post.setCommunity(null);
          }
 
-        //Agregar la fecha y hora actual
-        post.setCreatedDate(LocalDateTime.now());
+            post.setCreatedDate(LocalDateTime.now());
+            post.setStatus(1);
+            post.setTitle(title);
+            post.setContent(content);
 
-        //Actualizar el status a activo
-        post.setStatus(1);
+            em.persist(post);
+            em.getTransaction().commit();
 
-        post.setTitle(title);
-        post.setContent(content);
+            // Crear notificación
+            NotificationService ns = new NotificationService();
+            ns.notifyNewPost(user, post);
 
-        //Llamanos al repositorio para guardar el post en la DB
-        try {
-            return postRepo.create(post);
+            return true;
+
         } catch (Exception e) {
-            System.out.println("Error en el PostService - save(): " + e);
+            System.out.println("Error en PostService.save(): " + e);
+            em.getTransaction().rollback();
             return false;
+
+        } finally {
+            em.close();
         }
     }
 
