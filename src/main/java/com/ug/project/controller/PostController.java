@@ -20,13 +20,14 @@ public class PostController {
         return postService.getAll();
     }
 
-    public void savePost(String title, String content, int idCommunity){
+    public boolean savePost(String title, String content, Integer idCommunity){
         title = title.trim();
         content = content.trim();
         boolean response = postService.save(title,content,idCommunity);
         if (response) {
             System.out.println("Post registrado exitosamente");
         }
+        return response;
 
     }
 

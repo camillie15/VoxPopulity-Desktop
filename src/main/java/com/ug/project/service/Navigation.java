@@ -9,6 +9,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import javafx.stage.Window;
 
 public class Navigation {
 
@@ -30,8 +31,11 @@ public class Navigation {
             Parent root = FXMLLoader.load(url);
             // 2. Obtener el Stage actual desde el evento (el botón presionado)
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            // 3. Cambiar la escena
-            Scene scene = new Scene(root);
+            // Reutilizar el tamaño actual de la ventana para la nueva escena
+            double w = stage.getWidth() <= 0 ? 1000 : stage.getWidth();
+            double h = stage.getHeight() <= 0 ? 600 : stage.getHeight();
+            // 3. Cambiar la escena manteniendo el tamaño
+            Scene scene = new Scene(root, w, h);
             stage.setTitle(title);
             stage.setScene(scene);
             stage.centerOnScreen();
@@ -60,7 +64,15 @@ public class Navigation {
             // 1. Cargar el FXML
             Parent root = FXMLLoader.load(url);
             //2. Crea una nueva escena
-            Scene scene = new Scene(root);
+            // Intentar usar el tamaño de la ventana actualmente activa (si existe)
+            Window active = Window.getWindows().stream().filter(Window::isShowing).filter(Window::isFocused).findFirst()
+                    .orElse(Window.getWindows().stream().filter(Window::isShowing).findFirst().orElse(null));
+            double w = 1200, h = 800;
+            if (active != null) {
+                w = active.getWidth() <= 0 ? w : active.getWidth();
+                h = active.getHeight() <= 0 ? h : active.getHeight();
+            }
+            Scene scene = new Scene(root, w, h);
             //3. Crea el nuevo stage y carga la escena anterior aquí
             Stage newStage = new Stage();
             newStage.setTitle(title);

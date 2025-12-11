@@ -1,4 +1,3 @@
-
 package com.ug.project.service;
 
 import com.ug.project.infrastructure.JPAUtil;
@@ -7,6 +6,7 @@ import com.ug.project.model.Community;
 import com.ug.project.model.Post;
 import com.ug.project.model.User;
 import com.ug.project.repository.PostRepository;
+import com.ug.project.repository.CommunityRepository;
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDateTime;
@@ -15,6 +15,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepo = new PostRepository();
+    private final CommunityRepository communityRepo = new CommunityRepository();
 
     public List<Post> getAll() {
         try {
@@ -25,7 +26,23 @@ public class PostService {
         return List.of();
     }
 
-    public boolean save(String title, String content, int communityId) {
+    public List<Post> getAllByCommunityId(int communityId) {
+        try {
+            return postRepo.findByCommunityId(communityId);
+        } catch (Exception e) {
+            System.out.println("Error en PostService - getAllByCommunityId: " + e);
+            return List.of();
+        }
+    }
+
+    // Cambiado para aceptar Integer y resolver la entidad Community correctamente
+    public boolean save(String title, String content, Integer communityId) {
+
+        // La comunidad es obligatoria
+        if (communityId == null || communityId <= 0) {
+            System.out.println("Error en el PostService - save(): CommunityId es obligatorio");
+            return false;
+        }
 
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -38,10 +55,27 @@ public class PostService {
             int idUser = SessionManager.getCurrentUser().getId();
             User user = em.find(User.class, idUser);
             post.setUser(user);
+         //Asignar id del usuario logueado al post creado
+         var idUserLogged = SessionManager.getCurrentUser().getId();
+         user.setId(idUserLogged);
+         post.setUser(user);
 
             // Comunidad REAL administrada por JPA
             Community community = em.find(Community.class, communityId);
             post.setCommunity(community);
+         //Resolver la community si se proporcionó un id válido
+         if (communityId != null && communityId > 0) {
+             Community c = communityRepo.findById(communityId);
+             if (c != null) {
+                 post.setCommunity(c);
+             } else {
+                 // Si el id no existe, dejamos community en null y loggeamos
+                 System.out.println("Advertencia: la comunidad con id " + communityId + " no existe. Se guardará el post sin comunidad.");
+                 post.setCommunity(null);
+             }
+         } else {
+             post.setCommunity(null);
+         }
 
             post.setCreatedDate(LocalDateTime.now());
             post.setStatus(1);
@@ -66,9 +100,6 @@ public class PostService {
             em.close();
         }
     }
-
-
-
 
     public List<Post> getAllByUserId(int id){
         try {

@@ -88,4 +88,20 @@ public class CommunityRepository {
             em.close();
         }
     }
+
+    // Nuevo método para obtener una Community gestionada por el EntityManager
+    public Community findById(Integer id) {
+        EntityManager em = jpaUtil.getEntityManager();
+        try {
+            try {
+                TypedQuery<Community> q = em.createQuery("SELECT c FROM Community c LEFT JOIN FETCH c.members WHERE c.id = :id", Community.class);
+                q.setParameter("id", id);
+                return q.getSingleResult();
+            } catch (jakarta.persistence.NoResultException ex) {
+                return null;
+            }
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.ug.project.controller;
 import com.ug.project.model.Community;
 import com.ug.project.service.CommunityService;
 import com.ug.project.ui.LoginApp;
+import com.ug.project.service.Navigation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -181,7 +182,8 @@ public class CommunityController {
 
     @FXML
     private void onBack(ActionEvent e) {
-        LoginApp.switchTo("/com/ug/project/ui/Login.fxml", 360, 260, "Login - VoxPopuliDB");
+        // Volver al Dashboard (muro principal) de forma robusta
+        LoginApp.switchTo("/com/ug/project/ui/Dashboard.fxml", 1000, 600, "Muro de Publicaciones");
     }
 
     private void alert(Alert.AlertType type, String msg) {

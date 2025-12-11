@@ -3,6 +3,7 @@ package com.ug.project.ui;
 import com.ug.project.controller.PostController;
 import com.ug.project.model.Post;
 import com.ug.project.service.Navigation;
+import com.ug.project.infrastructure.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,11 +15,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
 public class PostHomeUI {
+
+    private static final Logger LOGGER = Logger.getLogger(PostHomeUI.class.getName());
 
     @FXML
     private VBox postsContainer;
@@ -89,37 +94,42 @@ public class PostHomeUI {
                 stage.setScene(scene);
                 stage.setTitle(post.getTitle());
             } catch (IOException ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Error al abrir PostDetailAndComment.fxml", ex);
             }
 
         });
         return card;
     }
 
+    @FXML
     public void onCreatePost(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/CreatePost.fxml", "Crear Post");
     }
 
+    @FXML
     public void onRefresh(ActionEvent actionEvent) {
         chargePostsOnScreen();
     }
 
+    @FXML
     public void onBack(ActionEvent actionEvent) {
+        // Limpiar la sesión del usuario y volver al login
+        SessionManager.clear();
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/Login.fxml", "Login - VoxPopuliDB");
     }
   
+    @FXML
     public void viewMyPosts(ActionEvent actionEvent) {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/UserPosts.fxml", "Mis posts");
     }
 
-    public void onCommunnity(ActionEvent actionEvent) {
-
+    @FXML
+    public void onNewCommunity(ActionEvent actionEvent) {
+        Navigation.switchScene(actionEvent, "/com/ug/project/ui/Communities.fxml", "Comunidades");
     }
 
     public void onNotifications(ActionEvent actionEvent) {
         NotificationUI ui = new NotificationUI();
         ui.show();
     }
-
-
-
 }

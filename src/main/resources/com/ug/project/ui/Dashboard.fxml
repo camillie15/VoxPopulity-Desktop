@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="TOP_CENTER" spacing="12"
@@ -20,23 +21,27 @@
 
     <Label styleClass="header-label" text="Muro de Publicaciones" />
 
-    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="520" prefWidth="760">
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="620" prefWidth="1000">
         <content>
             <VBox fx:id="postsContainer" spacing="10">
                 <padding>
-                    <Insets bottom="10" left="5" right="15" top="5" />
+                    <Insets bottom="6" left="5" right="15" top="5" />
                 </padding>
 
             </VBox>
         </content>
     </ScrollPane>
 
-    <HBox alignment="CENTER_LEFT" spacing="10">
+    <HBox alignment="CENTER_RIGHT" spacing="12" HBox.hgrow="ALWAYS">
+        <padding>
+            <Insets top="6" right="6" bottom="6" left="6" />
+        </padding>
+        <Region />
         <Button onAction="#onCreatePost" text="Nueva Publicación" />
-        <Button onAction="#onCreatePost" text="Comunidades" /> //Cambiar
         <Button onAction="#onRefresh" text="Recargar" />
-        <Button onAction="#onBack" text="Atrás" />
-        <Button onAction="#viewMyPosts" text="Mi posteos" />
+        <Button onAction="#viewMyPosts" text="Mis posts" />
+        <Button onAction="#onNewCommunity" text="Comunidades" />
+        <Button onAction="#onBack" text="Cerrar sesión" />
         <Button onAction="#onNotifications" text="🔔 Notificaciones" />
     </HBox>
 
