@@ -3,6 +3,8 @@ package com.ug.project.controller;
 import com.ug.project.infrastructure.SessionManager;
 import com.ug.project.model.Post;
 import com.ug.project.service.PostService;
+import com.ug.project.service.NotificationService;
+
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class PostController {
         return postService.getAll();
     }
 
-    public boolean savePost(String title, String content, int idCommunity){
+    public boolean savePost(String title, String content, Integer idCommunity){
         title = title.trim();
         content = content.trim();
         boolean response = postService.save(title,content,idCommunity);
@@ -26,16 +28,17 @@ public class PostController {
             System.out.println("Post registrado exitosamente");
         }
         return response;
+
     }
 
     public List<Post> getPostsCurrentUser() {
-        try {
         int id = SessionManager.getCurrentUser().getId();
-            if(id <= 0 ) {
-                System.out.println(SessionManager.getCurrentUser().getId());
-                System.out.println("Error PostController - getPostsCurrentUser: id del usuario invalido");
-                return List.of();
-            }
+        if(id <= 0 ) {
+            System.out.println(SessionManager.getCurrentUser().getId());
+            System.out.println("Error PostController - getPostsCurrentUser: id del usuario invalido");
+            return List.of();
+        }
+        try {
             return postService.getAllByUserId(id);
         } catch (Exception e) {
             System.out.println("Error PostController - getPostsCurrentUser: " + e);

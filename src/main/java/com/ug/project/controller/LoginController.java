@@ -9,6 +9,8 @@ import com.ug.project.infrastructure.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import com.ug.project.service.NotificationService;
+
 
 public class LoginController {
 
@@ -31,13 +33,19 @@ public class LoginController {
         if (user != null) {
             // Guardar sesión del usuario
             SessionManager.setCurrentUser(user);
-            // navegar a la pantalla de comunidades
-            // Abrir Comunidades con tamaño mayor (estilo SPA)
+
+            // 🔔 Crear notificación de bienvenida
+            NotificationService ns = new NotificationService();
+            ns.notifyLogin(user);
+
+            // Navegar al dashboard
             Navigation.switchScene(e, "/com/ug/project/ui/Dashboard.fxml", "VoxPopuly");
+
         } else {
             alert(Alert.AlertType.ERROR, "Usuario o contraseña incorrectos.");
         }
     }
+
 
     @FXML
     private void onGoRegister(ActionEvent e) {
