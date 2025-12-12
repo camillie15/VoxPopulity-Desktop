@@ -18,24 +18,24 @@ public class PostController {
         return postService.getAll();
     }
 
-    public void savePost(String title, String content, int idCommunity){
+    public boolean savePost(String title, String content, int idCommunity){
         title = title.trim();
         content = content.trim();
         boolean response = postService.save(title,content,idCommunity);
         if (response) {
             System.out.println("Post registrado exitosamente");
         }
-
+        return response;
     }
 
     public List<Post> getPostsCurrentUser() {
-        int id = SessionManager.getCurrentUser().getId();
-        if(id <= 0 ) {
-            System.out.println(SessionManager.getCurrentUser().getId());
-            System.out.println("Error PostController - getPostsCurrentUser: id del usuario invalido");
-            return List.of();
-        }
         try {
+        int id = SessionManager.getCurrentUser().getId();
+            if(id <= 0 ) {
+                System.out.println(SessionManager.getCurrentUser().getId());
+                System.out.println("Error PostController - getPostsCurrentUser: id del usuario invalido");
+                return List.of();
+            }
             return postService.getAllByUserId(id);
         } catch (Exception e) {
             System.out.println("Error PostController - getPostsCurrentUser: " + e);
