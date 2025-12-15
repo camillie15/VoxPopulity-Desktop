@@ -6,18 +6,35 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.ug.project.controller.CommunityDetailsController"
-      spacing="10" alignment="CENTER_LEFT">
+      spacing="10" alignment="TOP_LEFT">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
 
-    <Label fx:id="lblName" style="-fx-font-size: 18;" />
-    <Label fx:id="lblDescription" wrapText="true" />
-    <Label fx:id="lblMembers" />
+    <!-- Encabezado con detalles -->
+    <VBox spacing="4">
+        <Label fx:id="lblName" style="-fx-font-size: 20; -fx-font-weight: bold;" />
+        <Label fx:id="lblDescription" wrapText="true" />
+        <Label fx:id="lblMembers" />
+    </VBox>
 
-    <HBox spacing="8">
-        <Button text="Crear Post en esta comunidad" fx:id="btnCreatePost" onAction="#onCreatePost" />
-        <Button text="Ver posts (placeholder)" fx:id="btnViewPosts" onAction="#onViewPosts" />
-        <Button text="Atrás" onAction="#onBack" />
+    <!-- Área dividida: Izquierda posts, Derecha miembros -->
+    <HBox spacing="12">
+        <!-- Izquierda: publicaciones en la comunidad -->
+        <VBox spacing="8" prefWidth="640">
+            <Label text="Publicaciones" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+            <ListView fx:id="lvPosts" prefHeight="420" />
+        </VBox>
+
+        <!-- Derecha: miembros de la comunidad -->
+        <VBox spacing="8" prefWidth="280">
+            <Label text="Miembros" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+            <ListView fx:id="lvMembers" prefHeight="420" />
+            <HBox spacing="8">
+                <Button text="Crear Post en esta comunidad" fx:id="btnCreatePost" onAction="#onCreatePost" />
+                <Button text="Atrás" onAction="#onBack" />
+            </HBox>
+        </VBox>
     </HBox>
+
 </VBox>

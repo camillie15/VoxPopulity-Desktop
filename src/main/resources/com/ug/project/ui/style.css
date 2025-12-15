@@ -1,90 +1,61 @@
-/* Estilos globales para VoxPopulity */
-
-.root {
-    -fx-font-family: "Segoe UI", "Tahoma", "Helvetica", Arial, sans-serif;
-    -fx-font-size: 13px;
-    -fx-background-color: linear-gradient(#f6f7fb, #e9eef8);
+/* --- Fondo general del login --- */
+.root-login {
+    -fx-background-color: linear-gradient(#eef2f7, #d9e2ef);
+    -fx-padding: 40;
 }
 
-.label {
-    -fx-text-fill: #222828;
+/* --- Tarjeta del login (CARD) --- */
+.login-card {
+    -fx-background-color: white;
+    -fx-padding: 35 40;
+    -fx-spacing: 15;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 15, 0.2, 0, 4);
 }
 
-.header-label {
-    -fx-font-size: 16px;
+/* --- Título del login --- */
+.login-title {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #1f4e79;
 }
 
-.button {
-    -fx-background-color: #2b7cff;
+/* --- Inputs (usuario y contraseña) --- */
+.login-input {
+    -fx-background-color: white;
+    -fx-border-color: #c3ccd9;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12;
+    -fx-font-size: 14px;
+}
+
+.login-input:focused {
+    -fx-border-color: #2b7cff;
+    -fx-border-width: 1.5;
+}
+
+/* --- Botón principal --- */
+.login-button {
+    -fx-background-color: linear-gradient(#2b7cff, #1f62d4);
     -fx-text-fill: white;
-    -fx-padding: 6 12 6 12;
-    -fx-background-radius: 6;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 12;
+    -fx-background-radius: 8;
 }
 
-.button:disabled {
-    -fx-opacity: 0.6;
+.login-button:hover {
+    -fx-background-color: linear-gradient(#1f62d4, #194fb1);
 }
 
-.text-field, .password-field {
-    -fx-background-color: white;
-    -fx-border-color: #cfd8e3;
-    -fx-border-radius: 4;
-    -fx-padding: 6 8 6 8;
-}
-
-.list-view {
-    -fx-border-color: #cfd8e3;
-    -fx-border-radius: 4;
-    -fx-background-color: white;
-}
-
-.hbox {
-    -fx-spacing: 8px;
-}
-
-.alert {
-    -fx-font-size: 13px;
-}
-
-/* Community card styles (estilo tipo reddit) */
-.community-card {
-    -fx-background-color: white;
-    -fx-padding: 10px;
-    -fx-spacing: 8px;
-    -fx-border-color: #e1e8f0;
-    -fx-border-width: 1px;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 6, 0, 0, 2);
-}
-
-.community-card .label {
-    -fx-text-fill: #1b262b;
-}
-
-.community-meta {
+/* --- Hipervínculo --- */
+.login-hyperlink {
+    -fx-text-fill: #2b7cff;
     -fx-font-size: 12px;
-    -fx-text-fill: #58666f;
 }
 
-.community-actions .button {
-    -fx-background-color: #2b7cff;
-}
-
-.community-title {
-    -fx-font-size: 15px;
-    -fx-font-weight: 600;
-}
-
-.post-body {
-    -fx-font-size: 13px;
-    -fx-text-fill: #333333;
-    -fx-padding: 5 0 5 0;
-}
-
-.scroll-pane, .scroll-pane > .viewport {
-    -fx-background-color: transparent;
-    -fx-background: transparent;
+.login-hyperlink:hover {
+    -fx-text-fill: #194fb1;
 }

@@ -3,6 +3,8 @@ package com.ug.project.controller;
 import com.ug.project.infrastructure.SessionManager;
 import com.ug.project.model.Post;
 import com.ug.project.service.PostService;
+import com.ug.project.service.NotificationService;
+
 
 import java.util.List;
 
@@ -18,13 +20,14 @@ public class PostController {
         return postService.getAll();
     }
 
-    public void savePost(String title, String content, int idCommunity){
+    public boolean savePost(String title, String content, Integer idCommunity){
         title = title.trim();
         content = content.trim();
         boolean response = postService.save(title,content,idCommunity);
         if (response) {
             System.out.println("Post registrado exitosamente");
         }
+        return response;
 
     }
 

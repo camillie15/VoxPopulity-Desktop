@@ -16,7 +16,13 @@ public class LoginApp extends Application {
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
-        switchTo("/com/ug/project/ui/Login.fxml", 360, 260, "Login - VoxPopuliDB");
+        // Asegurar un tamaño inicial cómodo para la aplicación (evitar ventanas muy pequeñas)
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(800);
+        // Evitar que la ventana sea demasiado pequeña (min size)
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(700);
+        switchTo("/com/ug/project/ui/Login.fxml", 1200, 800, "Login - VoxPopuliDB");
         stage.centerOnScreen();
         primaryStage.centerOnScreen();
         primaryStage.show();
@@ -51,7 +57,10 @@ public class LoginApp extends Application {
             @SuppressWarnings("unchecked")
             T controller = (T) loader.getController();
             if (initializer != null && controller != null) initializer.accept(controller);
-            Scene scene = new Scene(root, w, h);
+            // Si el primaryStage ya tiene un tamaño establecido, lo reutilizamos
+            double width = (primaryStage != null && primaryStage.getWidth() > 0) ? primaryStage.getWidth() : w;
+            double height = (primaryStage != null && primaryStage.getHeight() > 0) ? primaryStage.getHeight() : h;
+            Scene scene = new Scene(root, width, height);
             applyStyle(scene);
             primaryStage.setTitle(title);
             primaryStage.centerOnScreen();
@@ -64,7 +73,9 @@ public class LoginApp extends Application {
     public static void switchTo(String fxmlPath, int w, int h, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(LoginApp.class.getResource(fxmlPath));
-            Scene scene = new Scene(loader.load(), w, h);
+            double width = (primaryStage != null && primaryStage.getWidth() > 0) ? primaryStage.getWidth() : w;
+            double height = (primaryStage != null && primaryStage.getHeight() > 0) ? primaryStage.getHeight() : h;
+            Scene scene = new Scene(loader.load(), width, height);
             applyStyle(scene);
             primaryStage.setTitle(title);
             primaryStage.centerOnScreen();
