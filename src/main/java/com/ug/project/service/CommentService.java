@@ -15,26 +15,23 @@ import jakarta.persistence.EntityManager;
 public class CommentService {
 
     private final JPAUtil jpaUtil = new JPAUtil();
-    private final CommentRepository repo;
+    private final CommentRepository repo = new CommentRepository();
     private final int MAX_LENGTH = 500; // match model's length
 
-    public CommentService(CommentRepository repo) {
-        this.repo = repo;
-    }
-
-    public Comment createComment(Integer postId, String content) {
-        Integer userId = SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getId() : null;
+    public boolean createComment(Integer postId, String content) {
+        //Integer userId = SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getId() : null;
+        Integer userId = 1;
         if (userId == null) {
             System.out.println("Usuario no autenticado");
-            return null;
+            return false;
         }
         if (content == null || content.trim().isEmpty()) {
             System.out.println("Contenido vacío");
-            return null;
+            return false;
         }
         if (content.length() > MAX_LENGTH) {
             System.out.println("Contenido demasiado largo");
-            return null;
+            return false;
         }
 
         Comment c = new Comment();
@@ -50,7 +47,8 @@ public class CommentService {
             em.close();
         }
 
-        return repo.save(c);
+        repo.save(c);
+        return true;
     }
 
     public Comment updateComment(Integer commentId, String newContent) {

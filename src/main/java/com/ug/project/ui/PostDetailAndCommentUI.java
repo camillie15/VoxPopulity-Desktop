@@ -30,7 +30,7 @@ public class PostDetailAndCommentUI {
     @FXML private Button addCommentButton;
     @FXML private Button backButton;
 
-    private final CommentService commentService = new CommentService(new CommentRepository());
+    private final CommentService commentService = new CommentService();
     private Post post;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
@@ -135,8 +135,8 @@ public class PostDetailAndCommentUI {
 
     private void onAddComment() {
         String text = newCommentArea.getText();
-        Comment created = commentService.createComment(post.getId(), text);
-        if (created != null) {
+        boolean created = commentService.createComment(post.getId(), text);
+        if (created) {
             newCommentArea.clear();
             loadComments();
         } else {
