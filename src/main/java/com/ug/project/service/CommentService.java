@@ -19,8 +19,7 @@ public class CommentService {
     private final int MAX_LENGTH = 500; // match model's length
 
     public boolean createComment(Integer postId, String content) {
-        //Integer userId = SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getId() : null;
-        Integer userId = 1;
+        Integer userId = SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getId() : null;
         if (userId == null) {
             System.out.println("Usuario no autenticado");
             return false;

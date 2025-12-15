@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class CommentController {
 
     private final CommentService service;
-    private Integer currentPostId = 3;
+    private Integer currentPostId;
 
     public CommentController(CommentService service) {
         this.service = service;
@@ -34,7 +34,6 @@ public class CommentController {
 
     public boolean addComment(String content) {
         Integer userId = SessionManager.getCurrentUser().getId();
-        //Integer userId = 1;
         if (userId == null) throw new IllegalStateException("Debe iniciar sesión");
         if (currentPostId == null) throw new IllegalStateException("No post selected");
         return service.createComment(currentPostId, content);
