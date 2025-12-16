@@ -12,11 +12,20 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Servicio que gestiona la lógica de negocio relacionada con los posts.
+ * Coordina las operaciones entre el controlador y el repositorio.
+ */
 public class PostService {
 
     private final PostRepository postRepo = new PostRepository();
     private final CommunityRepository communityRepo = new CommunityRepository();
 
+    /**
+     * Obtiene todos los posts activos del sistema.
+     * 
+     * @return Lista de posts, lista vacía en caso de error
+     */
     public List<Post> getAll() {
         try {
             return postRepo.findAll();
@@ -26,6 +35,12 @@ public class PostService {
         return List.of();
     }
 
+    /**
+     * Obtiene todos los posts que pertenecen a una comunidad específica.
+     * 
+     * @param communityId ID de la comunidad
+     * @return Lista de posts de la comunidad, lista vacía en caso de error
+     */
     public List<Post> getAllByCommunityId(int communityId) {
         try {
             return postRepo.findByCommunityId(communityId);
@@ -35,7 +50,16 @@ public class PostService {
         }
     }
 
-    // Cambiado para aceptar Integer y resolver la entidad Community correctamente
+    /**
+     * Guarda un nuevo post en el sistema.
+     * Crea el post asociado al usuario actual y a una comunidad específica.
+     * También genera una notificación de nuevo post.
+     * 
+     * @param title Título del post
+     * @param content Contenido del post
+     * @param communityId ID de la comunidad (obligatorio)
+     * @return true si el post se guardó exitosamente, false en caso contrario
+     */
     public boolean save(String title, String content, Integer communityId) {
 
         // La comunidad es obligatoria
@@ -101,6 +125,12 @@ public class PostService {
         }
     }
 
+    /**
+     * Obtiene todos los posts creados por un usuario específico.
+     * 
+     * @param id ID del usuario
+     * @return Lista de posts del usuario, lista vacía si no hay registros o en caso de error
+     */
     public List<Post> getAllByUserId(int id){
         try {
             var posts = postRepo.findByUserId(id);
@@ -115,6 +145,12 @@ public class PostService {
         }
     }
 
+    /**
+     * Elimina un post del sistema mediante borrado lógico.
+     * 
+     * @param idPost ID del post a eliminar
+     * @return true si el post se eliminó exitosamente, false en caso contrario
+     */
     public boolean deletePost(int idPost){
         try {
             return postRepo.delete(idPost);
@@ -124,6 +160,12 @@ public class PostService {
         }
     }
 
+    /**
+     * Actualiza la información de un post existente.
+     * 
+     * @param post Objeto Post con la información actualizada
+     * @return true si el post se actualizó exitosamente, false en caso contrario
+     */
     public boolean editPost(Post post){
         return postRepo.update(post);
     }
