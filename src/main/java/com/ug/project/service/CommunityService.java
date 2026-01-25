@@ -32,4 +32,8 @@ public class CommunityService {
     public Community findById(Integer id) {
         return repo.findAll().stream().filter(c -> c.getId() != null && c.getId().equals(id)).findFirst().orElse(null);
     }
+
+    public Community update(Community c) {
+        return repo.save(c);
+    }
 }

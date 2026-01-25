@@ -15,8 +15,14 @@
 
     <!-- Contenedor principal: izquierda lista, derecha formulario de creación -->
     <HBox spacing="18" alignment="TOP_CENTER">
-        <!-- IZQUIERDA: listado de comunidades -->
-        <ListView fx:id="lvCommunities" prefHeight="640" prefWidth="680" />
+        <!-- IZQUIERDA: contenedor con filtro y listado de comunidades -->
+        <VBox spacing="8">
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="txtFilter" promptText="Buscar comunidades..." HBox.hgrow="ALWAYS" />
+                <Button text="Limpiar" onAction="#onClearFilter" />
+            </HBox>
+            <ListView fx:id="lvCommunities" prefHeight="640" prefWidth="680" />
+        </VBox>
 
         <!-- DERECHA: formulario para crear/gestionar una comunidad -->
         <VBox spacing="8" alignment="TOP_LEFT" prefWidth="360">
@@ -32,6 +38,7 @@
 
             <HBox spacing="10" alignment="CENTER_RIGHT">
                 <Button text="Crear" onAction="#onCreate" />
+                <Button text="Editar" onAction="#onEdit" />
                 <Button text="Eliminar" onAction="#onDelete" />
             </HBox>
 

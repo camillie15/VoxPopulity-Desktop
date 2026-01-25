@@ -1,0 +1,150 @@
+Resumen y contexto de la sección "Comunidad" del proyecto
+
+Objeto
+
+Este documento está pensado para proporcionar a otra IA (o a un revisor humano) todo el contexto necesario sobre la sección "Comunidad" de la aplicación, los archivos relacionados, los cambios realizados (añadida la opción de editar una comunidad) y un informe de Verificación y Validación (V&V) con casos de prueba y criterios de aceptación.
+
+1) Ubicación del código (rutas relativas al proyecto)
+
+- FXML vista principal de comunidades:
+  src/main/resources/com/ug/project/ui/Communities.fxml
+
+- Controlador de la vista:
+  src/main/java/com/ug/project/controller/CommunityController.java
+
+- Servicio de dominio:
+  src/main/java/com/ug/project/service/CommunityService.java
+
+- Repositorio/JPA:
+  src/main/java/com/ug/project/repository/CommunityRepository.java
+
+- Modelo de datos relevante (clase Entity):
+  src/main/java/com/ug/project/model/Community.java
+
+- Utilidades de navegación/UI:
+  src/main/java/com/ug/project/ui/LoginApp.java (métodos switchTo / switchToWithInit usados para navegación SPA)
+
+- Manejo de sesión/usuario:
+  src/main/java/com/ug/project/infrastructure/SessionManager.java
+
+2) Propósito funcional actual de la sección "Comunidad"
+
+- Permite listar comunidades existentes en un ListView.
+- Cada comunidad se muestra como una tarjeta con título, descripción, conteo de miembros y botones de acción (Unirse/Salir según sesión y Detalles).
+- Formulario lateral que permite crear una nueva comunidad (nombre obligatorio, descripción opcional).
+- Funcionalidades implementadas: listar, crear, eliminar, unirse/salir, ver detalles (navegación a un controlador de detalles).
+
+3) Cambio implementado (resumen)
+
+- Se añadió la opción de editar una comunidad (nombre y descripción) desde la vista de `Communities.fxml`.
+- Cambios en archivos:
+  a) `Communities.fxml`: se añadió un botón "Editar" junto a Crear/Eliminar en el formulario lateral.
+  b) `CommunityService.java`: se añadió un método público `update(Community c)` que delega en `CommunityRepository.save(c)` para realizar un merge/persist.
+  c) `CommunityController.java`: se añadió el método `onEdit(ActionEvent e)` que:
+     - Obtiene la comunidad seleccionada del `ListView`.
+     - Si no hay selección muestra una alerta pidiendo seleccionar una comunidad.
+     - Abre un `Dialog` modal con `TextField` para `nombre` (requerido) y `descripción`.
+     - Valida que `nombre` no sea vacío antes de aceptar.
+     - Al confirmar, actualiza la entidad (`setName`, `setDescription`) y llama `service.update(sel)` para persistir.
+     - Reemplaza la instancia en `ObservableList items` (items.set(idx, updated)) para forzar la notificación/refresh del UI o, si no encuentra el índice, invoca `lvCommunities.refresh()`.
+     - Maneja excepciones runtime mostrando un `Alert` de error.
+
+4) Detección de soporte en la capa de persistencia
+
+- `CommunityRepository.save(Community c)` ya implementa comportamiento de persistencia: si `c.getId()` es null -> `persist`, else -> `merge` y commit.
+- Por tanto `service.update(...)` delega en `repo.save(...)` y realizará un merge correctamente en JPA.
+
+5) Reglas de negocio y restricciones relacionadas con edición
+
+- Nombre: obligatorio, no puede estar vacío ni solo espacios.
+- Descripción: opcional, se normaliza a cadena vacía si es nula.
+- Concurrencia / integridad referencial: el repositorio usa transacciones; si hay conflicto de persistencia se lanzará una RuntimeException que se muestra al usuario.
+- No hay validación adicional implementada en esta iteración: por ejemplo, unicidad del nombre no está verificada antes de persistir (depende de la restricción en la BD o JPA). Si la base de datos impone unicidad, habrá que capturar la excepción y presentar un mensaje más amigable.
+
+6) Casos de prueba propuestos (V&V)
+
+A. Pruebas funcionales (UI - manual)
+
+1. Editar comunidad - camino feliz
+   - Precondición: existe al menos una comunidad en la lista.
+   - Pasos:
+     1) Seleccionar una comunidad del ListView.
+     2) Pulsar el botón "Editar" en el panel lateral.
+     3) Cambiar el nombre por "Comunidad X mod" y la descripción por "Desc nueva".
+     4) Pulsar Aceptar/OK.
+   - Resultado esperado:
+     - El nombre y descripción se actualizan en la tarjeta de la lista inmediatamente.
+     - Si recargas la vista (reiniciar la pantalla o navegar fuera y volver), los cambios persisten en la BD.
+
+2. Editar sin seleccionar comunidad
+   - Paso: pulsar "Editar" sin seleccionar elemento.
+   - Resultado: aparece alerta pidiendo seleccionar una comunidad.
+
+3. Editar con nombre vacío
+   - Seleccionar comunidad, pulsar Editar, borrar el campo nombre y pulsar OK.
+   - Resultado: el diálogo no se cierra y aparece alerta indicando que el nombre no puede estar vacío.
+
+4. Conflicto de unicidad (si la BD define nombre único)
+   - Intentar cambiar el nombre a uno que ya exista (si la base impone unicidad).
+   - Resultado: la transacción fallará y el usuario verá una alerta de error. Recomendación: mejorar el mensaje para explicar que ese nombre ya existe.
+
+B. Pruebas de integración / persistencia (automáticas / unitarias)
+
+1. Unit test del `CommunityService.update`
+   - Crear una comunidad en la BD de prueba (o usar DB en memoria), actualizar el nombre y la descripción con `update`, luego `findById` y comprobar que refleja los valores nuevos.
+
+2. Test de repositorio `CommunityRepository.save` para merge
+   - Crear -> persistir -> modificar campo local -> save(merge) -> read -> comprobar.
+
+C. Pruebas no funcionales / de robustez
+
+1. Manejo de excepciones: simular fallo en DB (por ejemplo intentar insertar nombre duplicado si hay restricción) y verificar que la excepción no deja transacción abierta y que se reporta al usuario.
+2. Pruebas de UI: verificar que el `ListView` refresca correctamente cuando se reemplaza el elemento en `ObservableList`.
+
+7) Criterios de aceptación
+
+- El botón "Editar" aparece y abre el diálogo.
+- No se permiten nombres vacíos.
+- Al confirmar, los cambios se persisten en la BD y se reflejan inmediatamente en la interfaz.
+- No se producen fugas de transacción (commit/rollback correcto) ni excepciones no capturadas.
+
+8) Riesgos y recomendaciones
+
+- Si existe una restricción de unicidad en la BD, conviene implementar una validación previa o capturar la excepción específica de JPA para mostrar un mensaje entendible.
+- Si varias personas pueden editar la misma comunidad simultáneamente, considerar implementar control de concurrencia optimista (p. ej. `@Version` en la entidad) y manejar `OptimisticLockException` explicando al usuario que la entidad cambió y proponiendo recargar.
+- UX: la edición se hace desde el panel lateral. Otra alternativa sería permitir "Editar" directamente en cada tarjeta (botón en la card). En la implementación actual también se podría habilitar doble-click sobre la tarjeta para abrir el diálogo.
+
+9) Recomendaciones para el entregable V&V que necesita la otra IA
+
+- Entregar este documento junto con las rutas de los archivos y el commit actual (si hay control de versiones) para que la IA pueda revisar el diff.
+- Solicitar a la IA que genere casos de prueba automatizados JUnit que:
+  - comprueben `CommunityService.update` (happy path + fallo por nombre duplicado si existe restricción),
+  - comprueben `CommunityRepository.save` (persist y merge),
+  - realicen un test de integración ligero que inicie la aplicación en un entorno de prueba y simule la acción de edición (usando TestFX o un enfoque de integración de UI si es requerido).
+
+10) Pasos para reproducir localmente (entorno mínimo)
+
+- Requisitos: JDK 17+ (ver `pom.xml`), Maven 3.x, base de datos configurada según `persistence.xml` (puede ser H2 para pruebas). Recomendación: usar un perfil de pruebas con una BD en memoria.
+- Comandos sugeridos:
+  - mvn clean test
+  - mvn javafx:run  (si el build está configurado para JavaFX) o ejecutar la clase principal `com.ug.project.ui.App` desde el IDE.
+
+11) Resultado del cambio aplicado (estado actual del código)
+
+- Se añadieron los artefactos mencionados en el punto 3. Se verificó que no hay errores estáticos de compilación en los archivos modificados (según la comprobación local automatizada del proyecto).
+
+12) Archivos y fragmentos clave referenciados (resumen)
+
+- `Communities.fxml`: contiene el ListView `fx:id="lvCommunities"`, campos `txtName`, `txtDescription` y los botones `Crear`, `Editar`, `Eliminar`, `Atrás`.
+- `CommunityController.onEdit`: muestra Dialog con validación y llama `service.update(sel)`.
+- `CommunityService.update`: delega en `CommunityRepository.save(Community)`.
+- `CommunityRepository.save`: realiza persist/merge en JPA con manejo de transacción y rollback en catch.
+
+---
+
+Si quieres, puedo:
+- Generar los casos de prueba JUnit/Mockito sugeridos en la sección 6.B.
+- Mejorar la UX permitiendo editar desde la tarjeta de cada comunidad (añadir botón "Editar" en la cell factory).
+- Implementar captura de errores específicos de persistencia (por ejemplo, detectar violación de unicidad y mostrar mensaje más claro).
+
+Fin del documento.
