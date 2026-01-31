@@ -198,8 +198,27 @@ public class CommunityController {
             alert(Alert.AlertType.WARNING, "Selecciona una comunidad para eliminar.");
             return;
         }
-        service.delete(sel);
-        items.remove(sel);
+
+        // Confirmar la eliminación con el usuario
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Confirmar eliminación");
+        confirmDialog.setHeaderText("¿Estás seguro de que deseas eliminar esta comunidad?");
+        confirmDialog.setContentText("Esta acción eliminará la comunidad \"" + sel.getName() +
+                                      "\", todas sus publicaciones y todos los comentarios asociados.\n\n" +
+                                      "Esta acción NO se puede deshacer.");
+
+        var result = confirmDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                service.delete(sel);
+                items.remove(sel);
+                alert(Alert.AlertType.INFORMATION, "Comunidad eliminada exitosamente.");
+            } catch (Exception ex) {
+                alert(Alert.AlertType.ERROR, "Error al eliminar la comunidad: " + ex.getMessage());
+                System.err.println("Error al eliminar comunidad: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
     }
 
     @FXML

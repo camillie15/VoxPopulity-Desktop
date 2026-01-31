@@ -180,4 +180,29 @@ public class PostRepository {
             }
         }
     }
+
+    /**
+     * Elimina físicamente todos los posts asociados a una comunidad específica.
+     * Este método se usa antes de eliminar una comunidad para evitar errores de integridad referencial.
+     *
+     * @param communityId ID de la comunidad
+     * @throws RuntimeException si ocurre un error durante la eliminación
+     */
+    public void deleteAllByCommunityId(int communityId) {
+        try (EntityManager em = jpaUtil.getEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
+                String jpql = "DELETE FROM Post p WHERE p.community.id = :communityId";
+                int deletedCount = em.createQuery(jpql)
+                        .setParameter("communityId", communityId)
+                        .executeUpdate();
+                tx.commit();
+                System.out.println("Posts eliminados de la comunidad " + communityId + ": " + deletedCount);
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw new RuntimeException("Error al eliminar posts de la comunidad", e);
+            }
+        }
+    }
 }
