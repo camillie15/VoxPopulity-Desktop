@@ -20,6 +20,11 @@ public class CommentController {
         this.service = service;
     }
 
+    // No-arg convenience constructor used by UI
+    public CommentController() {
+        this(new CommentService());
+    }
+
     public void setPostId(Integer postId) {
         this.currentPostId = postId;
     }
@@ -32,11 +37,29 @@ public class CommentController {
                 .collect(Collectors.toList());
     }
 
-    public void addComment(String content) {
-        Integer userId = SessionManager.getCurrentUser().getId();
+    public boolean addComment(String content) {
+        Integer userId = SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getId() : null;
         if (userId == null) throw new IllegalStateException("Debe iniciar sesión");
         if (currentPostId == null) throw new IllegalStateException("No post selected");
-        service.createComment(currentPostId, content);
+        return service.createComment(currentPostId, content);
+    }
+
+    // UI-facing helpers
+
+    public List<Comment> getCommentsForPost(Integer postId) {
+        return service.getCommentsForPost(postId);
+    }
+
+    public boolean createComment(Integer postId, String content) {
+        return service.createComment(postId, content);
+    }
+
+    public boolean updateComment(Integer commentId, String newContent) {
+        return service.updateComment(commentId, newContent) != null;
+    }
+
+    public boolean deleteComment(Integer commentId, Long requestingUserId) {
+        return service.deleteComment(commentId, requestingUserId);
     }
 
     private String formatComment(Comment c) {

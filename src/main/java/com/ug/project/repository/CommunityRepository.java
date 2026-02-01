@@ -40,9 +40,28 @@ public class CommunityRepository {
         EntityManager em = jpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
+
+            // 1. Primero eliminar todos los comentarios de los posts de esta comunidad
+            String deleteComments = "DELETE FROM Comment c WHERE c.post.id IN " +
+                    "(SELECT p.id FROM Post p WHERE p.community.id = :communityId)";
+            int commentsDeleted = em.createQuery(deleteComments)
+                    .setParameter("communityId", c.getId())
+                    .executeUpdate();
+            System.out.println("Comentarios eliminados: " + commentsDeleted);
+
+            // 2. Luego eliminar todos los posts asociados a esta comunidad
+            String deletePosts = "DELETE FROM Post p WHERE p.community.id = :communityId";
+            int postsDeleted = em.createQuery(deletePosts)
+                    .setParameter("communityId", c.getId())
+                    .executeUpdate();
+            System.out.println("Posts eliminados: " + postsDeleted);
+
+            // 3. Finalmente eliminar la comunidad
             Community attached = em.find(Community.class, c.getId());
             if (attached != null) em.remove(attached);
+
             em.getTransaction().commit();
+            System.out.println("Comunidad eliminada exitosamente: " + c.getName());
         } catch (RuntimeException ex) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw ex;

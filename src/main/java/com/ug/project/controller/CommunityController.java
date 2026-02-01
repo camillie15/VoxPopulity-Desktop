@@ -6,9 +6,12 @@ import com.ug.project.ui.LoginApp;
 import com.ug.project.service.Navigation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -18,9 +21,11 @@ public class CommunityController {
     @FXML private ListView<Community> lvCommunities;
     @FXML private TextField txtName;
     @FXML private TextField txtDescription;
+    @FXML private TextField txtFilter;
 
     private final CommunityService service = new CommunityService();
     private final ObservableList<Community> items = FXCollections.observableArrayList();
+    private FilteredList<Community> filtered;
 
     @FXML
     public void initialize() {
@@ -30,7 +35,24 @@ public class CommunityController {
             Community sample = service.create("General", "Comunidad por defecto");
             items.add(sample);
         }
-        lvCommunities.setItems(items);
+
+        // Configurar filtrado por nombre
+        filtered = new FilteredList<>(items, c -> true);
+        SortedList<Community> sorted = new SortedList<>(filtered);
+        // opcional: mantener orden alfabético (por name) si quieres que SortedList ordene
+        // sorted.setComparator((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        lvCommunities.setItems(sorted);
+
+        // Listener para filtrar en tiempo real por nombre
+        if (txtFilter != null) {
+            txtFilter.textProperty().addListener((obs, oldV, newV) -> {
+                String q = newV == null ? "" : newV.trim().toLowerCase();
+                filtered.setPredicate(c -> {
+                    if (q.isEmpty()) return true;
+                    return c.getName() != null && c.getName().toLowerCase().contains(q);
+                });
+            });
+        }
 
         // Cell factory para mostrar cada comunidad como tarjeta (card)
         lvCommunities.setCellFactory(list -> new ListCell<>() {
@@ -176,14 +198,94 @@ public class CommunityController {
             alert(Alert.AlertType.WARNING, "Selecciona una comunidad para eliminar.");
             return;
         }
-        service.delete(sel);
-        items.remove(sel);
+
+        // Confirmar la eliminación con el usuario
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Confirmar eliminación");
+        confirmDialog.setHeaderText("¿Estás seguro de que deseas eliminar esta comunidad?");
+        confirmDialog.setContentText("Esta acción eliminará la comunidad \"" + sel.getName() +
+                                      "\", todas sus publicaciones y todos los comentarios asociados.\n\n" +
+                                      "Esta acción NO se puede deshacer.");
+
+        var result = confirmDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                service.delete(sel);
+                items.remove(sel);
+                alert(Alert.AlertType.INFORMATION, "Comunidad eliminada exitosamente.");
+            } catch (Exception ex) {
+                alert(Alert.AlertType.ERROR, "Error al eliminar la comunidad: " + ex.getMessage());
+                System.err.println("Error al eliminar comunidad: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void onBack(ActionEvent e) {
         // Volver al Dashboard (muro principal) de forma robusta
         LoginApp.switchTo("/com/ug/project/ui/Dashboard.fxml", 1000, 600, "Muro de Publicaciones");
+    }
+
+    @FXML
+    private void onEdit(ActionEvent e) {
+        Community sel = lvCommunities.getSelectionModel().getSelectedItem();
+        if (sel == null) {
+            alert(Alert.AlertType.WARNING, "Selecciona una comunidad para editar.");
+            return;
+        }
+
+        // Crear diálogo de edición
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Editar comunidad");
+        dialog.setHeaderText("Editar nombre y descripción");
+
+        // Campos
+        TextField nameField = new TextField(sel.getName());
+        TextField descField = new TextField(sel.getDescription() == null ? "" : sel.getDescription());
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.add(new Label("Nombre:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Descripción:"), 0, 1);
+        grid.add(descField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Validación simple: no permitir OK si nombre vacío
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(javafx.event.ActionEvent.ACTION, ev -> {
+            if (nameField.getText() == null || nameField.getText().isBlank()) {
+                ev.consume();
+                alert(Alert.AlertType.WARNING, "El nombre no puede estar vacío.");
+            }
+        });
+
+        dialog.setResultConverter(btn -> btn);
+        var result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                sel.setName(nameField.getText().trim());
+                sel.setDescription(descField.getText() == null ? "" : descField.getText().trim());
+                Community updated = service.update(sel);
+                // Reemplazar en la lista local para que ObservableList notifique cambios
+                int idx = items.indexOf(sel);
+                if (idx >= 0) items.set(idx, updated);
+                else lvCommunities.refresh();
+            } catch (RuntimeException ex) {
+                alert(Alert.AlertType.ERROR, "Error al actualizar la comunidad: " + ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void onClearFilter(ActionEvent e) {
+        if (txtFilter != null) {
+            txtFilter.clear();
+        }
     }
 
     private void alert(Alert.AlertType type, String msg) {

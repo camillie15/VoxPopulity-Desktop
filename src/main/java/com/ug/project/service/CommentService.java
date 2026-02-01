@@ -15,73 +15,40 @@ import jakarta.persistence.EntityManager;
 public class CommentService {
 
     private final JPAUtil jpaUtil = new JPAUtil();
-    private final CommentRepository repo;
+    private final CommentRepository repo = new CommentRepository();
     private final int MAX_LENGTH = 500; // match model's length
 
-    public CommentService(CommentRepository repo) {
-        this.repo = repo;
-    }
-
-    public Comment createComment(Integer postId, String content) {
+    public boolean createComment(Integer postId, String content) {
         Integer userId = SessionManager.getCurrentUser() != null ? SessionManager.getCurrentUser().getId() : null;
         if (userId == null) {
             System.out.println("Usuario no autenticado");
-            return null;
+            return false;
         }
         if (content == null || content.trim().isEmpty()) {
             System.out.println("Contenido vacío");
-            return null;
+            return false;
         }
         if (content.length() > MAX_LENGTH) {
             System.out.println("Contenido demasiado largo");
-            return null;
+            return false;
         }
 
         Comment c = new Comment();
         c.setContent(content.trim());
 
+        // short-lived EM used only to obtain references
         EntityManager em = jpaUtil.getEntityManager();
-
-        Post postRef = null;
-        User userRef = null;
-
         try {
-            userRef = (User) em.getReference(getUserClass(), userId);
-            postRef = (Post) em.getReference(getPostClass(), postId);
-
-            c.setUser(userRef);
-            c.setPost(postRef);
+            c.setUser((User) em.getReference(getUserClass(), userId));
+            c.setPost((Post) em.getReference(getPostClass(), postId));
             c.setCreatedDate(LocalDateTime.now());
-
         } finally {
             em.close();
         }
 
-        // 1️⃣ Guardar comentario
-        Comment saved = repo.save(c);
-
-        // 2️⃣ Notificar al dueño del post (si no es la misma persona)
-        try {
-            if (postRef != null && postRef.getUser() != null) {
-                Integer ownerId = postRef.getUser().getId();
-
-                if (!ownerId.equals(userId)) {
-                    NotificationService ns = new NotificationService();
-                    String msg = userRef.getUsername()
-                            + " comentó tu publicación: \""
-                            + postRef.getTitle() + "\"";
-
-                    ns.send(postRef.getUser(), msg);
-                    System.out.println("🔔 Notificación enviada al dueño del post.");
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error al notificar comentario: " + e);
-        }
-
-        return saved;
+        repo.save(c);
+        return true;
     }
-
 
     public Comment updateComment(Integer commentId, String newContent) {
         if (newContent == null || newContent.trim().isEmpty()) {

@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.format.DateTimeFormatter;
@@ -94,7 +95,7 @@ public class PostHomeUI {
                 stage.setScene(scene);
                 stage.setTitle(post.getTitle());
             } catch (IOException ex) {
-                LOGGER.log(Level.SEVERE, "Error al abrir PostDetailAndComment.fxml", ex);
+                ex.printStackTrace();
             }
 
         });
@@ -106,7 +107,6 @@ public class PostHomeUI {
         Navigation.switchScene(actionEvent, "/com/ug/project/ui/CreatePost.fxml", "Crear Post");
     }
 
-    @FXML
     public void onRefresh(ActionEvent actionEvent) {
         chargePostsOnScreen();
     }

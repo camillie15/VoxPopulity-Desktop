@@ -11,20 +11,19 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Usa JDK 20 (lo tienes en tu POM y es compatible con JavaFX 21) -->
+        <!-- Usa JDK 21 (coherente con tu entorno actual) -->
         <maven.compiler.release>20</maven.compiler.release>
 
-        <!-- Versión JavaFX -->
-        <javafx.version>21.0.5</javafx.version>
-        <javafx.platform>win</javafx.platform>
-
-        <!-- Clase principal -->
+        <!-- Clase principal de tu app (para otros plugins si lo necesitas) -->
         <exec.mainClass>com.ug.project.ui.App</exec.mainClass>
+
+        <!-- Versión de JavaFX -->
+        <javafx.version>21.0.5</javafx.version>
+        <!-- Plataforma JavaFX para dependencias nativas (win|linux|mac) -->
+        <javafx.platform>win</javafx.platform>
     </properties>
 
     <dependencies>
-
         <!-- MySQL -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -32,53 +31,49 @@
             <version>8.4.0</version>
         </dependency>
 
-        <!-- JPA EclipseLink -->
+        <!-- JPA: EclipseLink -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa</artifactId>
             <version>4.0.3</version>
         </dependency>
-
+        <!-- API de Jakarta Persistence (explícita) -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.1.0</version>
         </dependency>
 
-        <!-- JavaFX: TODOS los módulos necesarios -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>${javafx.platform}</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>${javafx.platform}</classifier>
-        </dependency>
-
+        <!-- JavaFX (con classifier de plataforma para incluir nativos al ejecutar fuera del plugin) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Plugin Maven para ejecutar JavaFX -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -86,6 +81,11 @@
                 <configuration>
                     <mainClass>com.ug.project.ui.App</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
             </plugin>
         </plugins>
     </build>

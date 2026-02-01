@@ -11,10 +11,22 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repositorio que gestiona el acceso a datos de los posts.
+ * Implementa operaciones CRUD sobre la entidad Post utilizando JPA.
+ */
 public class PostRepository {
 
     private final JPAUtil jpaUtil = new JPAUtil();
 
+    /**
+     * Crea un nuevo post en la base de datos.
+     * Adjunta las entidades relacionadas (User y Community) antes de persistir.
+     * 
+     * @param post Objeto Post a crear
+     * @return true si el post se creó exitosamente
+     * @throws RuntimeException si ocurre un error durante la creación
+     */
     public boolean create (Post post){
         try (EntityManager em = jpaUtil.getEntityManager()) {
             EntityTransaction tx = em.getTransaction();
@@ -43,6 +55,12 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Obtiene todos los posts activos del sistema ordenados por ID descendente.
+     * 
+     * @return Lista de posts con status = 1
+     * @throws RuntimeException si ocurre un error durante la consulta
+     */
     public List<Post> findAll() {
         try (EntityManager em = jpaUtil.getEntityManager()) {
             try {
@@ -55,6 +73,13 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Busca un post por su ID.
+     * 
+     * @param id ID del post a buscar
+     * @return Optional conteniendo el post si existe, Optional vacío en caso contrario
+     * @throws RuntimeException si ocurre un error durante la consulta
+     */
     public Optional<Post> findById(Integer id) {
         try (EntityManager em = jpaUtil.getEntityManager()) {
             try {
@@ -66,6 +91,13 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Obtiene todos los posts activos creados por un usuario específico.
+     * 
+     * @param userId ID del usuario
+     * @return Lista de posts del usuario ordenados por ID descendente
+     * @throws RuntimeException si ocurre un error durante la consulta
+     */
     public List<Post> findByUserId(int userId){
         try (EntityManager em = jpaUtil.getEntityManager()) {
             try {
@@ -80,6 +112,13 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Obtiene todos los posts activos de una comunidad específica.
+     * 
+     * @param communityId ID de la comunidad
+     * @return Lista de posts de la comunidad ordenados por ID descendente
+     * @throws RuntimeException si ocurre un error durante la consulta
+     */
     public List<Post> findByCommunityId(int communityId) {
         try (EntityManager em = jpaUtil.getEntityManager()) {
             try {
@@ -94,6 +133,13 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Actualiza el título y contenido de un post existente.
+     * 
+     * @param post Objeto Post con la información actualizada
+     * @return true si el post se actualizó exitosamente
+     * @throws RuntimeException si ocurre un error durante la actualización
+     */
     public boolean update(Post post) {
         try (EntityManager em = jpaUtil.getEntityManager()) {
             EntityTransaction tx = em.getTransaction();
@@ -112,6 +158,13 @@ public class PostRepository {
         }
     }
 
+    /**
+     * Realiza un borrado lógico de un post cambiando su status a 0.
+     * 
+     * @param idPost ID del post a eliminar
+     * @return true si el post se eliminó exitosamente
+     * @throws RuntimeException si ocurre un error durante la eliminación
+     */
     public boolean delete(int idPost){
         try (EntityManager em = jpaUtil.getEntityManager()) {
             EntityTransaction tx = em.getTransaction();
@@ -124,6 +177,31 @@ public class PostRepository {
             } catch (Exception e) {
                 if (tx.isActive()) tx.rollback();
                 throw new RuntimeException("Error al eliminar", e);
+            }
+        }
+    }
+
+    /**
+     * Elimina físicamente todos los posts asociados a una comunidad específica.
+     * Este método se usa antes de eliminar una comunidad para evitar errores de integridad referencial.
+     *
+     * @param communityId ID de la comunidad
+     * @throws RuntimeException si ocurre un error durante la eliminación
+     */
+    public void deleteAllByCommunityId(int communityId) {
+        try (EntityManager em = jpaUtil.getEntityManager()) {
+            EntityTransaction tx = em.getTransaction();
+            try {
+                tx.begin();
+                String jpql = "DELETE FROM Post p WHERE p.community.id = :communityId";
+                int deletedCount = em.createQuery(jpql)
+                        .setParameter("communityId", communityId)
+                        .executeUpdate();
+                tx.commit();
+                System.out.println("Posts eliminados de la comunidad " + communityId + ": " + deletedCount);
+            } catch (Exception e) {
+                if (tx.isActive()) tx.rollback();
+                throw new RuntimeException("Error al eliminar posts de la comunidad", e);
             }
         }
     }
