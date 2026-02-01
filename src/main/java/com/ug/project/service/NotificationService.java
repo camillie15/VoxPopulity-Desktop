@@ -114,4 +114,9 @@ public class NotificationService {
             em.close();
         }
     }
+
+    public void delete(Integer id) {
+        repo.delete(id);
+    }
+
 }

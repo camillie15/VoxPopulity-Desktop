@@ -13,7 +13,7 @@ public class Notification {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")   // user_id → Users.userId
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "message", nullable = false)

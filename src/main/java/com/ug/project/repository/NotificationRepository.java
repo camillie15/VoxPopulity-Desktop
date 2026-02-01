@@ -36,4 +36,14 @@ public class NotificationRepository {
         }
         em.getTransaction().commit();
     }
+
+    public void delete(Integer id) {
+        em.getTransaction().begin();
+        Notification n = em.find(Notification.class, id);
+        if (n != null) {
+            em.remove(n);
+        }
+        em.getTransaction().commit();
+    }
+
 }

@@ -30,4 +30,8 @@
             onAction="#onMarkAllRead"
             styleClass="main-button"/>
 
+    <Button text="Eliminar notificación"
+            onAction="#onDelete"
+            styleClass="main-button"/>
+
 </VBox>
